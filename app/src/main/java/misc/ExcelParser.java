@@ -102,12 +102,22 @@ public class ExcelParser {
             int end = sheet.getLastRowNum();
             Row topRow = sheet.getRow(start - 1);
 
+            components.RestaurantEntry idealRestaurant = new components.RestaurantEntry();
+            idealRestaurant.setCapacity(30);
+            idealRestaurant.setHoliday(true);
+            idealRestaurant.setLastAdmissionTime(java.time.LocalTime.of(20, 0));
+            idealRestaurant.setPrep(new misc.LongPair(2, 8));
+            idealRestaurant.setPrice(new misc.LongPair(10_000, 100_000));
+            idealRestaurant.setRating(3.d);
+            idealRestaurant.setDiningGood(0b0101101);
+            idealRestaurant.setTypeAmenities(0b11010111);
 
             for (rowIndex = start; rowIndex <= end; rowIndex++) {
                 Row row = sheet.getRow(rowIndex);
                 long lAmenities = 0; long lDinning = 0;
                 // For each row, create a new restaurant
                 components.RestaurantEntry restaurant = new components.RestaurantEntry();
+                System.out.println("-".repeat(50));
                 misc.Utils.logAppend("Setting attributes for restaurant #" + (components.RestaurantEntry.getRestaurantCount()), null);
                 for (Cell cell : row) {
                     switch (topRow.getCell(cell.getColumnIndex()).getStringCellValue()){
@@ -190,8 +200,8 @@ public class ExcelParser {
                     }
                     
                 }
-                System.out.println("-".repeat(50));
                 restaurantList.add(restaurant);
+                restaurant.getScore(idealRestaurant);
             }
             
         } catch (IOException e) {

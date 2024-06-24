@@ -88,7 +88,7 @@ public class RestaurantEntry implements Comparable<RestaurantEntry>{
         setRating(1.d);
         setDiningGood(0);
         setPrep(new misc.LongPair(1, 2));
-        setHoliday(true);
+        setHoliday(false);
         setLastAdmissionTime(java.time.LocalTime.of(0, 0));
 
         restaurantCount++;
@@ -157,16 +157,24 @@ public class RestaurantEntry implements Comparable<RestaurantEntry>{
     }
 
     public long getScore(RestaurantEntry idealRestaurant){
+        System.out.println("Score:\nType and Amenities: " + Long.bitCount(typeAmenities & idealRestaurant.getTypeAmenities()));
+        System.out.printf("Price: %d, %d\n", (idealRestaurant.getPrice().getX() >= getPrice().getX()? 1 : 0), (idealRestaurant.getPrice().getY() <= getPrice().getY()? 1 : 0));
+        System.out.println("Last Admission Time: " + (idealRestaurant.getLastAdmisionTime().toSecondOfDay() < getLastAdmisionTime().toSecondOfDay()? 1 : 0));
+        System.out.println("Capacity: " + (idealRestaurant.getCapacity() <= getCapacity()? 1 : 0));
+        System.out.println("Holiday: " + (idealRestaurant.getHoliday() ^ getHoliday()? 0 : 1));
+        System.out.println("Rating: " + (Math.abs(idealRestaurant.getRating() - getRating()) < 2.d ? (int)Math.ceil(2.d - Math.abs(idealRestaurant.getRating() - getRating())) : 0));
+        System.out.printf("Prep time: %d, %d\n", (idealRestaurant.getPrepTime().getX() >= getPrepTime().getX()? 1 : 0), (idealRestaurant.getPrepTime().getY() <= getPrepTime().getY()? 1 : 0));
+
         return (scoreOverall = Long.bitCount(typeAmenities & idealRestaurant.getTypeAmenities())
-            + Long.bitCount(diningTimeGoodFor & idealRestaurant.getDiningTimeGoodFor())
-            + (idealRestaurant.getPrice().getX() > getPrice().getX()? 1 : 0) // Min price of ideal > min price of current
-            + (idealRestaurant.getPrice().getY() < getPrice().getY()? 1 : 0)
-            + (idealRestaurant.getPrepTime().getX() > getPrepTime().getX()? 1 : 0)
-            + (idealRestaurant.getPrepTime().getY() < getPrepTime().getY()? 1 : 0)
-            + (Math.abs(idealRestaurant.getRating() - getRating()) < 2.d ? (int)Math.ceil(2.d - Math.abs(idealRestaurant.getRating() - getRating())) : 0)
-            + (idealRestaurant.getHoliday() ^ getHoliday()? 0 : 1) // Xor to get match, if match -> false -> 1
+            + (idealRestaurant.getPrice().getX() >= getPrice().getX()? 1 : 0) // Min price of ideal > min price of current
+            + (idealRestaurant.getPrice().getY() <= getPrice().getY()? 1 : 0)
             + (idealRestaurant.getLastAdmisionTime().toSecondOfDay() < getLastAdmisionTime().toSecondOfDay()? 1 : 0)
-            + (idealRestaurant.getCapacity() < getCapacity()? 1 : 0)
+            + (idealRestaurant.getCapacity() <= getCapacity()? 1 : 0)
+            + (idealRestaurant.getHoliday() ^ getHoliday()? 0 : 1) // Xor to get match, if match -> false -> 1
+            + (Math.abs(idealRestaurant.getRating() - getRating()) < 2.d ? (int)Math.ceil(2.d - Math.abs(idealRestaurant.getRating() - getRating())) : 0)
+            + Long.bitCount(diningTimeGoodFor & idealRestaurant.getDiningTimeGoodFor())
+            + (idealRestaurant.getPrepTime().getX() >= getPrepTime().getX()? 1 : 0)
+            + (idealRestaurant.getPrepTime().getY() <= getPrepTime().getY()? 1 : 0)
         );
     }
 
