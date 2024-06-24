@@ -1,10 +1,10 @@
 package misc;
 
-public class CoordsPair {
+public class DoublePair {
     private double x;
     private double y;
 
-    public CoordsPair(double _x, double _y){
+    public DoublePair(double _x, double _y){
         x = _x;
         y = _y;
     }
@@ -17,12 +17,12 @@ public class CoordsPair {
         return y;
     }
 
-    public double doubleGetDistance(CoordsPair othePair){
+    public double doubleGetDistance(DoublePair othePair){
         return Math.sqrt(Math.pow(x, 2.d) + Math.pow(y, 2.d));
     }
 
-    public CoordsPair addPair(CoordsPair otherPair){
-        return new CoordsPair(getX() + otherPair.getX(), getY() + otherPair.getY());
+    public DoublePair addPair(DoublePair otherPair){
+        return new DoublePair(getX() + otherPair.getX(), getY() + otherPair.getY());
     }
 
     @Override

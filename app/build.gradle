@@ -17,6 +17,12 @@ jar {
     }
 }
 
+// compileJava.options.encoding = 'ISO-8859-1'
+
+// tasks.withType(run) {
+//     options.encoding = 'ISO-8859-1'
+// }
+
 repositories {
     // Use Maven Central for resolving dependencies.
     mavenCentral()

@@ -1,23 +1,6 @@
 package misc;
 
 public class Utils {
-    public static final java.util.HashMap<String, Long> mFacilities = new java.util.HashMap<>() {{
-        put("air_conditioning", 1L);
-        put("airport_shuttle", 2L);
-        put("beach", 4L);
-        put("bar", 8L);
-        put("family_rooms", 16L);
-        put("electric_vehicle_charging_station", 32L);
-        put("non_smoking_room", 64L);
-        put("swimming_pool", 128L);
-    }};
-
-    public static java.util.HashMap<String, Integer> mTypes = new java.util.HashMap<>() {{
-        put("Hotels", 1);
-        put("Hostels", 2);
-        put("Capsule Hotels", 4);
-    }};
-
     public enum validations {
         vInt,
         vLong,
@@ -26,44 +9,16 @@ public class Utils {
         vBool
     }
 
-    // public enum eFacilities {
-    //     air_con(),
-    //     airport_shuttle(),
-    //     beach(),
-    //     bar(),
-    //     family_room(),
-    //     ev_charge_station(),
-    //     non_smoke_room(),
-    //     swim_pool();
-        
-    //     private long value;
-    //     private long nextBit = 1;
-    //     private eFacilities() {
-    //         value = nextBit;
-    //         nextBit *= 2;
-    //     }
+    public enum LogFlags{
+        flNorm,
+        flWarn,
+        flErr
+    }
 
-    //     public long getValue() {
-    //         return value;
-    //     }
-    // }
-
-    // public enum eTypes {
-    //     hotel(),
-    //     hostel(),
-    //     capsule();
-        
-    //     private int value;
-    //     private int nextBit = 1;
-    //     private eTypes() {
-    //         value = nextBit;
-    //         nextBit *= 2;
-    //     }
-
-    //     public int getValue() {
-    //         return value;
-    //     }
-    // }
+    public static void logAppend(Object message, LogFlags flag){
+        System.out.print(java.time.format.DateTimeFormatter.ofPattern("HH:mm:ss  ").format(java.time.LocalDateTime.now()));
+        System.out.println(((flag == LogFlags.flWarn)? "\033[33mWARN: " : (flag == LogFlags.flErr) ? "\033[31mERR: " : "\033[0mINFO: ") + message + "\033[0m");
+    }
     
     public static String getLine(String message, validations val){
         System.out.print(message);
