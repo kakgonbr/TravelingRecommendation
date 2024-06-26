@@ -18,7 +18,7 @@ public class DoublePair {
     }
 
     public double doubleGetDistance(DoublePair othePair){
-        return Math.sqrt(Math.pow(x, 2.d) + Math.pow(y, 2.d));
+        return Math.sqrt(Math.pow(Math.abs(getX() - othePair.getX()) * 111.320d * Math.cos(getY()), 2.d) + Math.pow(Math.abs(getY() - othePair.getY()) * 110.574d, 2.d));
     }
 
     public DoublePair addPair(DoublePair otherPair){
@@ -27,6 +27,6 @@ public class DoublePair {
 
     @Override
     public String toString(){
-        return String.format("(%.2f, %.2f)", getX(), getY());
+        return String.format("(%f, %f)", getX(), getY());
     }
 }

@@ -17,7 +17,7 @@ jar {
     }
 }
 
-// compileJava.options.encoding = 'ISO-8859-1'
+compileJava.options.encoding = 'ISO-8859-1'
 
 // tasks.withType(run) {
 //     options.encoding = 'ISO-8859-1'

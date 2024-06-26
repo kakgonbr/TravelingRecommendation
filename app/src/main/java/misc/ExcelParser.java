@@ -1,6 +1,5 @@
 package misc;
 
-import org.apache.commons.math3.distribution.IntegerDistribution;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.FileInputStream;
@@ -17,14 +16,19 @@ public class ExcelParser {
             int start = sheet.getFirstRowNum() + 1;
             int end = sheet.getLastRowNum();
             Row topRow = sheet.getRow(start - 1);
-
+            
+            components.HotelEntry idealHotel = new components.HotelEntry();
+            idealHotel.setFacilities(0b1111111);
+            idealHotel.setTypeAmenities(0b11111111);
+            idealHotel.setRating(4);
+            idealHotel.setView(true);
 
             for (rowIndex = start; rowIndex <= end; rowIndex++) {
                 Row row = sheet.getRow(rowIndex);
                 long lAmenities = 0;
                 // For each row, create a new hotel
                 components.HotelEntry hotel = new components.HotelEntry();
-                misc.Utils.logAppend("Setting attributes for hotel #" + (components.HotelEntry.getCount()), null);
+                misc.Utils.logAppend("Setting attributes for hotel #" + (components.HotelEntry.getCount() - 1), null);
                 for (Cell cell : row) {
                     switch (topRow.getCell(cell.getColumnIndex()).getStringCellValue()){
                         case "id": // id
@@ -79,7 +83,7 @@ public class ExcelParser {
                 }
                 System.out.println("-".repeat(50));
                 hotelList.add(hotel);
-                // System.out.println(hotel.getScore(new components.HotelEntry(components.HotelEntry.getCount(), "yes sir", 0b1011111, 0b1, "good hotel", new misc.CoordsPair(100.d, 100.d), "nowhere", true, 3)));
+                hotel.getScore(idealHotel);
             }
             
         } catch (IOException e) {
@@ -118,7 +122,7 @@ public class ExcelParser {
                 // For each row, create a new restaurant
                 components.RestaurantEntry restaurant = new components.RestaurantEntry();
                 System.out.println("-".repeat(50));
-                misc.Utils.logAppend("Setting attributes for restaurant #" + (components.RestaurantEntry.getRestaurantCount()), null);
+                misc.Utils.logAppend("Setting attributes for restaurant #" + (components.RestaurantEntry.getRestaurantCount() - 1), null);
                 for (Cell cell : row) {
                     switch (topRow.getCell(cell.getColumnIndex()).getStringCellValue()){
                         case "id":
