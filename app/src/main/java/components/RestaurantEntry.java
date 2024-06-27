@@ -235,4 +235,39 @@ public class RestaurantEntry implements Comparable<RestaurantEntry>{
     public int compareTo(RestaurantEntry o) {
         return - Long.compare(getScore(), o.getScore());
     }
+    @Override
+    public String toString(){
+        long temp;
+        return String.format("\nID: %d"
+                                    + "\nName: %s"
+                                    + "\nrating: %.2f"
+                                    + "\nPrice: %d - %d"
+                                    + "\nLocation: %s"
+                                    + "\nCapacity: %d people"
+                                    + "\nPreparation Time: %d - %d minutes"
+                                    + "\nDining Times:"
+                                    + (((temp = getDiningTimeGoodFor()) & 1L) == 0L ? "" : "\n - Morning")
+                                    + ((temp & 2L) == 0L ? "" : "\n - Noon")
+                                    + ((temp & 4L) == 0L ? "" : "\n - Afternoon")
+                                    + ((temp & 8L) == 0L ? "" : "\n - Evening")                                    
+                                    + "\nAmenities: "
+                                    + (((temp = getTypeAmenities()) & 1L) == 0 ? "" : "\n - Delivery" )
+                                    + ((temp & 2L) == 0L ? "" : "\n - Takeaway" )
+                                    + ((temp & 4L) == 0L ? "" : "\n - Free Bike Park")
+                                    + ((temp & 2L) == 0L ? "" : "\n - Outdoor Seats" )
+                                    + "\nTypes: "
+                                    + ((temp & 16L) == 0L ? "" : "\n - Bakery")
+                                    + ((temp & 32L) == 0L ? "" : "\n - Foodcourt")
+                                    + ((temp & 64L) == 0L ? "" : "\n - Restaurant")
+                                    + ((temp & 128L) == 0L ? "" : "\n - Coffee - Dessert")
+                                    + ((temp & 256L) == 0L ? "" : "\n - Sight - Landmark")
+                                    + ((temp & 512L) == 0L ? "" : "\n - Online Shopping")
+                                    + ((temp & 1024L) == 0L ? "" : "\n - Street Food")
+                                    + ((temp & 2048L) == 0L ? "" : "\n - Shop - Store")
+                                    + ((temp & 4096L) == 0L ? "" : "\n - Wedding Convention") + "\n"
+                                    , getId(), getName(), getRating(), getPrice().getX(), getPrice().getY(), getLocation(),
+                                    getCapacity(),
+                                    getPrepTime().getX(),
+                                    getPrepTime().getY());
+    }
 }

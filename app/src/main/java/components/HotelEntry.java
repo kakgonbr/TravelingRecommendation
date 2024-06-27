@@ -175,6 +175,34 @@ public class HotelEntry implements Comparable<HotelEntry>{
     public int compareTo(HotelEntry o) {
         return - Long.compare(getScore(), o.getScore());
     }
+
+    @Override
+    public String toString(){
+        long temp;
+        return String.format("\nID: %d"
+                                + "\nName: %s"
+                                + "\nRating: %d"
+                                + "\nLocation: %s"
+                                + "\nDescription:\n%s\n"
+                                + "\nType:"
+                                + (((temp = getTypeAmenities()) & 1L) == 0L ? "" : "Hotel")
+                                + ((temp & 2L) == 0L ? "" : "Hostel")
+                                + ((temp & 4L) == 0L ? "" : "Capsule Hotel")
+                                + "\nAmenities: "
+                                + ((temp & 8L) == 0L ? "" : "\n - Safe")
+                                + ((temp & 16L) == 0L ? "" : "\n - Suit Press")
+                                + ((temp & 32L) == 0L ? "" : "\n - Heating")
+                                + "\nFacilities: "
+                                + (((temp = getFacilities()) & 1L) == 0L ? "" : "\n - Air Conditioner")
+                                + ((temp & 2L) == 0L ? "" : "\n - Airport Shuttle")
+                                + ((temp & 4L) == 0L ? "" : "\n - Beach")
+                                + ((temp & 8L) == 0L ? "" : "\n - Bar")
+                                + ((temp & 16L) == 0L ? "" : "\n - Family Rooms")
+                                + ((temp & 32L) == 0L ? "" : "\n - EV Charging Station")
+                                + ((temp & 64L) == 0L ? "" : "\n - Non Smoking Room")
+                                + ((temp & 128L) == 0L ? "" : "\n - Swimming Pool") + "\n"
+                                , getId(), getName(), getRating(), getLocation(), getDescription());
+    }
     
 }
 

@@ -6,7 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 public class ExcelParser {
-    public static void hotelParser(final java.util.ArrayList<components.HotelEntry> hotelList){
+    public static void hotelParser(final java.util.ArrayList<components.HotelEntry> hotelList) throws IOException, IllegalStateException, NumberFormatException{
         int rowIndex = 0;
 
         try (FileInputStream fis = new FileInputStream("Hotel_Mau.xlsx");
@@ -88,14 +88,17 @@ public class ExcelParser {
             
         } catch (IOException e) {
             misc.Utils.logAppend(e.getMessage(), misc.Utils.LogFlags.flErr);
+            throw e;
         } catch (java.lang.IllegalStateException e1){
             misc.Utils.logAppend("COULD NOT PARSE EXCEL DATA, ERROR AT ROW INDEX: " + rowIndex + "\n" + e1.getMessage(), misc.Utils.LogFlags.flErr);
+            throw e1;
         } catch (java.lang.NumberFormatException e2){
             misc.Utils.logAppend("COULD NOT PARSE EXCEL DATA, ERROR AT ROW INDEX: " + rowIndex + "\n" + e2.getMessage(), misc.Utils.LogFlags.flErr);
+            throw e2;
         }
     }
 
-    public static void restaurantParser(java.util.ArrayList<components.RestaurantEntry> restaurantList){
+    public static void restaurantParser(java.util.ArrayList<components.RestaurantEntry> restaurantList) throws IOException, IllegalStateException, NumberFormatException{
         int rowIndex = 0;
 
         try (FileInputStream fis = new FileInputStream("Restaurant_Mau.xlsx");
@@ -210,10 +213,13 @@ public class ExcelParser {
             
         } catch (IOException e) {
             misc.Utils.logAppend(e.getMessage(), misc.Utils.LogFlags.flErr);
+            throw e;
         } catch (java.lang.IllegalStateException e1){
             misc.Utils.logAppend("COULD NOT PARSE EXCEL DATA, ERROR AT ROW INDEX: " + rowIndex + "\n" + e1.getMessage(), misc.Utils.LogFlags.flErr);
+            throw e1;
         } catch (java.lang.NumberFormatException e2){
             misc.Utils.logAppend("COULD NOT PARSE EXCEL DATA, ERROR AT ROW INDEX: " + rowIndex + "\n" + e2.getMessage(), misc.Utils.LogFlags.flErr);
+            throw e2;
         }
     }
 }

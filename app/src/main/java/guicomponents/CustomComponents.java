@@ -56,23 +56,28 @@ public class CustomComponents {
         private String title;
         public ListPanel(String[] _items, String _title){
             super();
+            title = _title;
 
             setPreferredSize(new Dimension(400, 600));
             setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-            setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-            setBackground(new Color(68, 70, 74));
+            setBorder(BorderFactory.createEmptyBorder(10, 30, 20, 10));
+            setBackground(new Color(58, 60, 64));
             // add(Box.createRigidArea(new Dimension(1, 10)));
 
             for (final String item : _items){
-                checkBoxes.add(checkboxPlaceHolder = new JCheckBox(String.format("%25.25s", item)));
+                checkBoxes.add(checkboxPlaceHolder = new JCheckBox(String.format("%s", item)));
+                checkboxPlaceHolder.setFont(new Font("Segoe UI", Font.BOLD, 16));
+                checkboxPlaceHolder.setHorizontalAlignment(SwingConstants.RIGHT);
                 checkboxPlaceHolder.setForeground(Color.WHITE);
-                checkboxPlaceHolder.setBackground(new Color(68, 70, 74));
+                checkboxPlaceHolder.setBackground(new Color(58, 60, 64));
+                
                 checkboxPlaceHolder.setAlignmentX(Component.LEFT_ALIGNMENT);
 
                 add(checkboxPlaceHolder);
-                add(Box.createRigidArea(new Dimension(1, 10)));
+                // add(Box.createRigidArea(new Dimension(1, 10)));
             }
         } // super
+
 
         public long getChoiceBinary(){
             long result = 0;
