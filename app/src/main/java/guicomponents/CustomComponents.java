@@ -51,8 +51,8 @@ public class CustomComponents {
         }
     }
     public static class ListPanel extends JPanel {
-        private java.util.ArrayList<JCheckBox> checkBoxes = new java.util.ArrayList<>();
-        private JCheckBox checkboxPlaceHolder;
+        private java.util.ArrayList<AbstractButton> checkBoxes = new java.util.ArrayList<>();
+        private AbstractButton placeHolder;
         private String title;
         public ListPanel(String[] _items, String _title){
             super();
@@ -65,28 +65,52 @@ public class CustomComponents {
             // add(Box.createRigidArea(new Dimension(1, 10)));
 
             for (final String item : _items){
-                checkBoxes.add(checkboxPlaceHolder = new JCheckBox(String.format("%s", item)));
-                checkboxPlaceHolder.setFont(new Font("Segoe UI", Font.BOLD, 16));
-                checkboxPlaceHolder.setHorizontalAlignment(SwingConstants.RIGHT);
-                checkboxPlaceHolder.setForeground(Color.WHITE);
-                checkboxPlaceHolder.setBackground(new Color(58, 60, 64));
+                checkBoxes.add(placeHolder = new JCheckBox(String.format("%s", item)));
+                placeHolder.setFont(new Font("Segoe UI", Font.BOLD, 16));
+                placeHolder.setHorizontalAlignment(SwingConstants.RIGHT);
+                placeHolder.setForeground(Color.WHITE);
+                placeHolder.setBackground(new Color(58, 60, 64));
                 
-                checkboxPlaceHolder.setAlignmentX(Component.LEFT_ALIGNMENT);
+                placeHolder.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-                add(checkboxPlaceHolder);
+                add(placeHolder);
                 // add(Box.createRigidArea(new Dimension(1, 10)));
             }
         } // super
+        public ListPanel(String[] _items, int radio){
+            title = "radio";
 
+            ButtonGroup buttonGroup = new ButtonGroup();
+            setPreferredSize(new Dimension(400, 600));
+            setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+            setBorder(BorderFactory.createEmptyBorder(10, 30, 20, 10));
+            setBackground(new Color(58, 60, 64));
+            // add(Box.createRigidArea(new Dimension(1, 10)));
+
+            for (final String item : _items){
+                checkBoxes.add(placeHolder = new JRadioButton(String.format("%s", item)));
+                placeHolder.setFont(new Font("Segoe UI", Font.BOLD, 16));
+                placeHolder.setHorizontalAlignment(SwingConstants.RIGHT);
+                placeHolder.setForeground(Color.WHITE);
+                placeHolder.setBackground(new Color(58, 60, 64));
+                
+                placeHolder.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+                add(placeHolder);
+                buttonGroup.add(placeHolder);
+                // add(Box.createRigidArea(new Dimension(1, 10)));
+            }
+            checkBoxes.get(radio).setSelected(true);
+        }
 
         public long getChoiceBinary(){
             long result = 0;
             long currentBit = 1;
-            for (final JCheckBox checkbox : checkBoxes){
+            for (final AbstractButton checkbox : checkBoxes){
                 if (checkbox.isSelected()) result |= currentBit;
                 currentBit *= 2;
             } // for
-            misc.Utils.logAppend("List panel: " + title + "\nBinary: " + Long.toBinaryString(result), null);
+            // misc.Utils.logAppend("List panel: " + title + "\nBinary: " + Long.toBinaryString(result), null);
             return result;
         }
     }

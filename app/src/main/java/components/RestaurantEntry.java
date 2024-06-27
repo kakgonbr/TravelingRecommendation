@@ -157,13 +157,13 @@ public class RestaurantEntry implements Comparable<RestaurantEntry>{
     }
 
     public long getScore(RestaurantEntry idealRestaurant){
-        System.out.println("Score:\nType and Amenities: " + Long.bitCount(typeAmenities & idealRestaurant.getTypeAmenities()));
-        System.out.printf("Price: %d, %d\n", (idealRestaurant.getPrice().getX() >= getPrice().getX()? 1 : 0), (idealRestaurant.getPrice().getY() <= getPrice().getY()? 1 : 0));
-        System.out.println("Last Admission Time: " + (idealRestaurant.getLastAdmisionTime().toSecondOfDay() < getLastAdmisionTime().toSecondOfDay()? 1 : 0));
-        System.out.println("Capacity: " + (idealRestaurant.getCapacity() <= getCapacity()? 1 : 0));
-        System.out.println("Holiday: " + (idealRestaurant.getHoliday() ^ getHoliday()? 0 : 1));
-        System.out.println("Rating: " + (Math.abs(idealRestaurant.getRating() - getRating()) < 2.d ? (int)Math.ceil(2.d - Math.abs(idealRestaurant.getRating() - getRating())) : 0));
-        System.out.printf("Prep time: %d, %d\n", (idealRestaurant.getPrepTime().getX() >= getPrepTime().getX()? 1 : 0), (idealRestaurant.getPrepTime().getY() <= getPrepTime().getY()? 1 : 0));
+        // System.out.println("Score:\nType and Amenities: " + Long.bitCount(typeAmenities & idealRestaurant.getTypeAmenities()));
+        // System.out.printf("Price: %d, %d\n", (idealRestaurant.getPrice().getX() >= getPrice().getX()? 1 : 0), (idealRestaurant.getPrice().getY() <= getPrice().getY()? 1 : 0));
+        // System.out.println("Last Admission Time: " + (idealRestaurant.getLastAdmisionTime().toSecondOfDay() < getLastAdmisionTime().toSecondOfDay()? 1 : 0));
+        // System.out.println("Capacity: " + (idealRestaurant.getCapacity() <= getCapacity()? 1 : 0));
+        // System.out.println("Holiday: " + (idealRestaurant.getHoliday() ^ getHoliday()? 0 : 1));
+        // System.out.println("Rating: " + (Math.abs(idealRestaurant.getRating() - getRating()) < 2.d ? (int)Math.ceil(2.d - Math.abs(idealRestaurant.getRating() - getRating())) : 0));
+        // System.out.printf("Prep time: %d, %d\n", (idealRestaurant.getPrepTime().getX() >= getPrepTime().getX()? 1 : 0), (idealRestaurant.getPrepTime().getY() <= getPrepTime().getY()? 1 : 0));
 
         return (scoreOverall = Long.bitCount(typeAmenities & idealRestaurant.getTypeAmenities())
             + (idealRestaurant.getPrice().getX() >= getPrice().getX()? 1 : 0) // Min price of ideal > min price of current
@@ -240,22 +240,22 @@ public class RestaurantEntry implements Comparable<RestaurantEntry>{
         long temp;
         return String.format("\nID: %d"
                                     + "\nName: %s"
-                                    + "\nrating: %.2f"
+                                    + "\nRating: %.2f"
                                     + "\nPrice: %d - %d"
                                     + "\nLocation: %s"
                                     + "\nCapacity: %d people"
                                     + "\nPreparation Time: %d - %d minutes"
-                                    + "\nDining Times:"
+                                    + "\n\nDining Times:"
                                     + (((temp = getDiningTimeGoodFor()) & 1L) == 0L ? "" : "\n - Morning")
                                     + ((temp & 2L) == 0L ? "" : "\n - Noon")
                                     + ((temp & 4L) == 0L ? "" : "\n - Afternoon")
                                     + ((temp & 8L) == 0L ? "" : "\n - Evening")                                    
-                                    + "\nAmenities: "
+                                    + "\n\nAmenities: "
                                     + (((temp = getTypeAmenities()) & 1L) == 0 ? "" : "\n - Delivery" )
                                     + ((temp & 2L) == 0L ? "" : "\n - Takeaway" )
                                     + ((temp & 4L) == 0L ? "" : "\n - Free Bike Park")
                                     + ((temp & 2L) == 0L ? "" : "\n - Outdoor Seats" )
-                                    + "\nTypes: "
+                                    + "\n\nTypes: "
                                     + ((temp & 16L) == 0L ? "" : "\n - Bakery")
                                     + ((temp & 32L) == 0L ? "" : "\n - Foodcourt")
                                     + ((temp & 64L) == 0L ? "" : "\n - Restaurant")

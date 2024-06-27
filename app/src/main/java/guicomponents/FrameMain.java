@@ -20,11 +20,15 @@ public class FrameMain extends JFrame{
     private JTextField latitudeField;
     private double perLong;
     private double perLat;
+    private JSpinner spinnerHotelStays;
+    private JSpinner spinnerRestaurantVisits;
     // Hotel
     private ListPanel hotelAmenities;
     private ListPanel hotelFacilities;
-    private JCheckBox hotelViewCheck;
+    private JCheckBox hotelCheckView;
+    private JCheckBox hotelCheckFilterRating;
     private ListPanel hotelTypes;
+    private JCheckBox checkFilter;
     private JSpinner hotelSpinnerRating;
     // Restaurant
     private ListPanel restaurantAmenities;
@@ -40,7 +44,14 @@ public class FrameMain extends JFrame{
     private java.util.ArrayList<components.HotelEntry> hotelList = new java.util.ArrayList<>();
     private java.util.ArrayList<components.RestaurantEntry> restaurantList = new java.util.ArrayList<>();
     // Recommend panel
-    private JTextArea infoArea;
+    private JTextArea txAreaInfo;
+    // private JTextArea txAreaComparison;
+    private JTextPane txPaneComparison;
+    private JPanel choicePanels;
+    private BoxLayout choiceBox;
+    private JScrollPane scrollPaneChoice;
+    private JScrollPane scrollPane;
+    private JScrollPane scrollPaneComparison;
     // Main panels
     private class PanelSwitcher extends JPanel {
         CustomButton buttonPersonal;
@@ -160,6 +171,20 @@ public class FrameMain extends JFrame{
         latitudeField.setBackground(new Color(58, 60, 64));
         latitudeField.setBounds(410, 150, 300, 30);
 
+        panelPersonal.add(labelPlaceHolder = new CustomLabel("Hotel Stays (days): ", eFontLevels.MEDIUM, 3));
+        labelPlaceHolder.setBounds(720, 50, 200, 30);
+
+        panelPersonal.add(spinnerHotelStays = new JSpinner(new SpinnerNumberModel(1, 1, 10000, 1)));
+        spinnerHotelStays.setFont(new Font("Segoe UI", 0, 20));
+        spinnerHotelStays.setBounds(740, 90, 50, 30);
+
+        panelPersonal.add(labelPlaceHolder = new CustomLabel("Restaurant Visits: ", eFontLevels.MEDIUM, 3));
+        labelPlaceHolder.setBounds(720, 120, 150, 30);
+
+        panelPersonal.add(spinnerRestaurantVisits = new JSpinner(new SpinnerNumberModel(1, 0, 100, 1)));
+        spinnerRestaurantVisits.setFont(new Font("Segoe UI", 0, 20));
+        spinnerRestaurantVisits.setBounds(740, 150, 50, 30);
+
         panelPersonal.add(labelPlaceHolder = new CustomLabel("-".repeat(30) + "  Ideal Hotel  " + "-".repeat(30)));
         labelPlaceHolder.setBounds(290, 190, 550, 30);
 
@@ -168,8 +193,14 @@ public class FrameMain extends JFrame{
 
         panelPersonal.add(hotelTypes = new ListPanel(new String[]{"Hotel",
                                                                     "Hostel",
-                                                                    "Capsule Hotel"}, "HotelTypes"));
+                                                                    "Capsule Hotel"}, 0));
         hotelTypes.setBounds(160, 250, 200, 150);
+
+        panelPersonal.add(checkFilter = new JCheckBox("Filter type"));
+        checkFilter.setFont(new Font("Segoe UI", 0, 16));
+        checkFilter.setForeground(Color.WHITE);
+        checkFilter.setBackground(new Color(32, 33, 35));
+        checkFilter.setBounds(170, 410, 120, 30);
 
         panelPersonal.add(labelPlaceHolder = new CustomLabel("Rating: ", eFontLevels.MEDIUM, 3));
         labelPlaceHolder.setBounds(20,220, 100, 30);
@@ -178,11 +209,17 @@ public class FrameMain extends JFrame{
         hotelSpinnerRating.setFont(new Font("Segoe UI", 0, 20));
         hotelSpinnerRating.setBounds(30, 250, 50, 30);
 
-        panelPersonal.add(hotelViewCheck = new JCheckBox("Allow View"));
-        hotelViewCheck.setFont(new Font("Segoe UI", 0, 16));
-        hotelViewCheck.setForeground(Color.WHITE);
-        hotelViewCheck.setBackground(new Color(32, 33, 35));
-        hotelViewCheck.setBounds(30, 350, 120, 30);
+        panelPersonal.add(hotelCheckView = new JCheckBox("Allow View"));
+        hotelCheckView.setFont(new Font("Segoe UI", 0, 16));
+        hotelCheckView.setForeground(Color.WHITE);
+        hotelCheckView.setBackground(new Color(32, 33, 35));
+        hotelCheckView.setBounds(30, 320, 120, 30);
+
+        panelPersonal.add(hotelCheckFilterRating = new JCheckBox("Filter rating"));
+        hotelCheckFilterRating.setFont(new Font("Segoe UI", 0, 16));
+        hotelCheckFilterRating.setForeground(Color.WHITE);
+        hotelCheckFilterRating.setBackground(new Color(32, 33, 35));
+        hotelCheckFilterRating.setBounds(30, 290, 120, 30);
 
         panelPersonal.add(labelPlaceHolder = new CustomLabel("Amenities: ", eFontLevels.MEDIUM, 3));
         labelPlaceHolder.setBounds(380, 220, 100, 30);
@@ -284,15 +321,42 @@ public class FrameMain extends JFrame{
         panelRecommend = new JPanel();
         panelRecommend.setBackground(new Color(32, 33, 35));
         panelRecommend.setLayout(null);
-        // panelRecommend.add(infoArea = new JTextArea(100, 300));
-        JScrollPane scrollPane = new JScrollPane(infoArea = new JTextArea(100, 300));
-        infoArea.setBackground(new Color(58, 60, 64));
-        infoArea.setForeground(Color.WHITE);
-        infoArea.setFont(new Font("Segoe UI", 0, 16));
-        infoArea.setLineWrap(true);
-        infoArea.setWrapStyleWord(true);
+        choicePanels = new JPanel();
+        choicePanels.setBackground(new Color(58, 60, 64));
+        choiceBox = new BoxLayout(choicePanels, BoxLayout.Y_AXIS);
+        choicePanels.setLayout(choiceBox);
+
+
+        // panelRecommend.add(txAreaInfo = new JTextArea(100, 300));
+        scrollPane = new JScrollPane(txAreaInfo = new JTextArea(100, 300));
+        // txAreaInfo.setBackground(new Color(58, 60, 64));
+        txAreaInfo.setBackground(new Color(10, 13, 15));
+        txAreaInfo.setForeground(Color.WHITE);
+        txAreaInfo.setFont(new Font("Segoe UI", 0, 16));
+        txAreaInfo.setLineWrap(true);
+        txAreaInfo.setWrapStyleWord(true);
+        txAreaInfo.setEditable(false);
+        txAreaInfo.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         panelRecommend.add(scrollPane);
-        scrollPane.setBounds(10, 320, 1100, 500);
+        scrollPane.setBounds(10, 330, 1100, 560);
+
+        // scrollPaneComparison = new JScrollPane(txAreaComparison = new JTextArea(100, 300));
+        // txAreaComparison.setBackground(new Color(10, 13, 15));
+        // txAreaComparison.setForeground(Color.WHITE);
+        // txAreaComparison.setFont(new Font("Segoe UI", 0, 16));
+        // txAreaComparison.setLineWrap(true);
+        // txAreaComparison.setWrapStyleWord(true);
+        // txAreaInfo.setEditable(false);
+        // scrollPaneComparison.getVerticalScrollBar().setUnitIncrement(16);
+        // panelRecommend.add(scrollPaneComparison);
+        // scrollPaneComparison.setBounds(320, 10, 790, 300);
+
+        scrollPaneComparison = new JScrollPane(txPaneComparison = new JTextPane());
+        txPaneComparison.setBackground(new Color(10, 13, 15));
+        scrollPaneComparison.getVerticalScrollBar().setUnitIncrement(16);
+        panelRecommend.add(scrollPaneComparison);
+        scrollPaneComparison.setBounds(320, 10, 790, 300);
 
         // Settings pane
         panelSettings = new JPanel();
@@ -324,13 +388,13 @@ public class FrameMain extends JFrame{
                 }
                 getRecommendation();
                 cardLayout.show(tabs, "recommend");
+                txAreaInfo.setText("");
             }
         );
         panelSwitcher.buttonSettings.addActionListener(e -> {
                 cardLayout.show(tabs, "settings");
             }
         );
-
 
         add(panelSwitcher, gbc);
         gbc.gridy = 1;
@@ -357,7 +421,7 @@ public class FrameMain extends JFrame{
         idealHotel.setFacilities(hotelFacilities.getChoiceBinary());
         idealHotel.setTypeAmenities(hotelTypes.getChoiceBinary() | hotelAmenities.getChoiceBinary());
         idealHotel.setRating((Integer) hotelSpinnerRating.getValue());
-        idealHotel.setView(hotelViewCheck.isSelected());
+        idealHotel.setView(hotelCheckView.isSelected());
 
         components.RestaurantEntry idealRestaurant = new components.RestaurantEntry();
         idealRestaurant.setCapacity((Integer) restaurantSpinnerCapacity.getValue());
@@ -366,38 +430,74 @@ public class FrameMain extends JFrame{
         idealRestaurant.setDiningGood(restaurantDiningTime.getChoiceBinary() | restaurantGoodFor.getChoiceBinary());
         idealRestaurant.setTypeAmenities(restaurantAmenities.getChoiceBinary() | restaurantTypes.getChoiceBinary());
 
+        combos.removeAll(combos);
         for (final components.HotelEntry hotel : hotelList) for (final components.RestaurantEntry restaurant : restaurantList){
+            if (checkFilter.isSelected() && (hotel.getTypeAmenities() & hotelTypes.getChoiceBinary()) == 0) continue;
+            if (hotelCheckFilterRating.isSelected() && (hotel.getRating() != idealHotel.getRating())) continue;
             hotel.getScore(idealHotel);
             restaurant.getScore(idealRestaurant);
             combos.add(new misc.Pair(hotel, restaurant));
-            combos.get(combos.size() - 1).setScore(1, 1, new misc.DoublePair(perLong, perLat));
+            combos.get(combos.size() - 1).setScore((Integer) spinnerHotelStays.getValue(), (Integer) spinnerRestaurantVisits.getValue(), new misc.DoublePair(perLong, perLat));
         }
         combos.sort((a, b) -> - Long.compare(a.getScore(), b.getScore()));
-        JPanel choicePanels = new JPanel();
-        choicePanels.setLayout(new BoxLayout(choicePanels, BoxLayout.Y_AXIS));
-        int i;
-        for (i = 0; i < combos.size(); i++){
+
+        try {
+            panelRecommend.remove(scrollPaneChoice);
+            choicePanels.removeAll();
+            panelRecommend.remove(choicePanels);
+            choicePanels = new JPanel();
+            choicePanels.setBackground(new Color(58, 60, 64));
+            choicePanels.setLayout(new BoxLayout(choicePanels, BoxLayout.Y_AXIS));
+        } catch (NullPointerException excNUL){}
+
+        for (int i = 0; i < combos.size(); i++){
             final int choiceIndex = i;
-            CustomButton button = new CustomButton("Choice #" + (choiceIndex + 1));
+            CustomButton button = new CustomButton("Choice #" + (i + 1));
             choicePanels.add(button);
-            // add(Box.createRigidArea(new Dimension(1, 10)));
             button.addActionListener(e -> loadInfo(choiceIndex));
+            choicePanels.add(Box.createRigidArea(new Dimension(1, 10)));
         }
         // panelRecommend.add(choicePanels);
         choicePanels.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        JScrollPane scrollPane = new JScrollPane(choicePanels);
-        panelRecommend.add(scrollPane);
-        scrollPane.setBounds(10, 10, 300, 300);
+        scrollPaneChoice = new JScrollPane(choicePanels);
+        panelRecommend.add(scrollPaneChoice);
+        scrollPaneChoice.getVerticalScrollBar().setUnitIncrement(16);
+        scrollPaneChoice.setBounds(10, 10, 300, 300);
+        panelRecommend.invalidate();
     }
 
     private void loadInfo(int index){
-        String text = "-".repeat(50) + " Hotel " + "-".repeat(50)
+        txAreaInfo.setText("-".repeat(78) + " Hotel " + "-".repeat(78)
                     + combos.get(index).getHotel()
-                    + "-".repeat(50) + " Restaurant " + "-".repeat(50)
-                    + combos.get(index).getRest();
-        infoArea.setText(text);
+                    + "-".repeat(76) + " Restaurant " + "-".repeat(76)
+                    + combos.get(index).getRest());
+        
+        new java.util.Timer().schedule( 
+            new java.util.TimerTask() {
+                @Override
+                public void run() {
+                    scrollPane.getViewport().setViewPosition(new Point(0,0));
+                }
+            }, 
+            50 
+        );
+        
         misc.Utils.logAppend("Hotel score: " + combos.get(index).getHotel().getScore()
                             + "\n\tRestaurant score: " + combos.get(index).getRest().getScore()
                             + "\n\tTotal score: " + combos.get(index).getScore(), null);
+    }
+
+    private void setPaneText(JTextPane tp, String msg, Color c, boolean _reset)
+    {
+        javax.swing.text.StyleContext sc = javax.swing.text.StyleContext.getDefaultStyleContext();
+        javax.swing.text.AttributeSet aset = sc.addAttribute(javax.swing.text.SimpleAttributeSet.EMPTY, javax.swing.text.StyleConstants.Foreground, c);
+
+        aset = sc.addAttribute(aset, javax.swing.text.StyleConstants.FontFamily, "Segoe UI");
+        aset = sc.addAttribute(aset, javax.swing.text.StyleConstants.Alignment, javax.swing.text.StyleConstants.ALIGN_LEFT);
+        aset = sc.addAttribute(aset, javax.swing.text.StyleConstants.FontSize, 18);
+        
+        tp.setCaretPosition(_reset ? 0 : tp.getDocument().getLength());
+        tp.setCharacterAttributes(aset, false);
+        tp.replaceSelection(msg);
     }
 }

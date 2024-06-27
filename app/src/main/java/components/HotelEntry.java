@@ -115,10 +115,10 @@ public class HotelEntry implements Comparable<HotelEntry>{
 
     // Important method: calculate score based on the ideal hotel's attributes
     public long getScore(HotelEntry idealHotel){
-        System.out.println("Rating: " + (Math.abs(idealHotel.getRating() - getRating()) <= 1 ? 2 - Math.abs(idealHotel.getRating() - getRating()) : 0L));
-        System.out.println("Facilities: " + Long.bitCount(idealHotel.getFacilities() & getFacilities()));
-        System.out.println("TypeAmenitiess: " + Long.bitCount(idealHotel.getTypeAmenities() & getTypeAmenities()));
-        System.out.println("View: " + (idealHotel.getView() ^ getView() ? 0L : 1L));
+        // System.out.println("Rating: " + (Math.abs(idealHotel.getRating() - getRating()) <= 1 ? 2 - Math.abs(idealHotel.getRating() - getRating()) : 0L));
+        // System.out.println("Facilities: " + Long.bitCount(idealHotel.getFacilities() & getFacilities()));
+        // System.out.println("TypeAmenitiess: " + Long.bitCount(idealHotel.getTypeAmenities() & getTypeAmenities()));
+        // System.out.println("View: " + (idealHotel.getView() ^ getView() ? 0L : 1L));
 
         return (scoreOverall = (Math.abs(idealHotel.getRating() - getRating()) <= 1 ? 2 - Math.abs(idealHotel.getRating() - getRating()) : 0L) // max rating diff of 1, 2 - diff to get score
                         + Long.bitCount(idealHotel.getFacilities() & getFacilities()) // facilities
@@ -184,15 +184,15 @@ public class HotelEntry implements Comparable<HotelEntry>{
                                 + "\nRating: %d"
                                 + "\nLocation: %s"
                                 + "\nDescription:\n%s\n"
-                                + "\nType:"
+                                + "\nType: "
                                 + (((temp = getTypeAmenities()) & 1L) == 0L ? "" : "Hotel")
                                 + ((temp & 2L) == 0L ? "" : "Hostel")
                                 + ((temp & 4L) == 0L ? "" : "Capsule Hotel")
-                                + "\nAmenities: "
+                                + "\n\nAmenities: "
                                 + ((temp & 8L) == 0L ? "" : "\n - Safe")
                                 + ((temp & 16L) == 0L ? "" : "\n - Suit Press")
                                 + ((temp & 32L) == 0L ? "" : "\n - Heating")
-                                + "\nFacilities: "
+                                + "\n\nFacilities: "
                                 + (((temp = getFacilities()) & 1L) == 0L ? "" : "\n - Air Conditioner")
                                 + ((temp & 2L) == 0L ? "" : "\n - Airport Shuttle")
                                 + ((temp & 4L) == 0L ? "" : "\n - Beach")
