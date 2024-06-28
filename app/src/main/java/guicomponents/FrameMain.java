@@ -352,6 +352,7 @@ public class FrameMain extends JFrame{
         // panelRecommend.add(scrollPaneComparison);
         // scrollPaneComparison.setBounds(320, 10, 790, 300);
 
+        // This will be used for displaying the differences between the selected hotel/restaurant and ideal ones
         scrollPaneComparison = new JScrollPane(txPaneComparison = new JTextPane());
         txPaneComparison.setBackground(new Color(10, 13, 15));
         scrollPaneComparison.getVerticalScrollBar().setUnitIncrement(16);
