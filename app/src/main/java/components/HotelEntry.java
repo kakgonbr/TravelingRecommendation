@@ -38,6 +38,7 @@ public class HotelEntry implements Comparable<HotelEntry>{
     // Static
     private static int hotelCount = 0;
     private static java.util.ArrayList<Integer> occupiedIDs = new java.util.ArrayList<>();
+    private static long temp;
 
     // ----------------------------------------------------- Constructors --------------------------------------------------------
     public HotelEntry(int _id, String _name, long _fac, int _typeAmenities, String _desc, misc.DoublePair _pCoords, String _location, boolean _view, int _rating) throws IllegalArgumentException {
@@ -170,24 +171,26 @@ public class HotelEntry implements Comparable<HotelEntry>{
     public int getRating() {
         return rating;
     }
+    
+    public String getType(){
+        return (((temp = getTypeAmenities()) & 1L) == 0L ? "" : "Hotel")
+        + ((temp & 2L) == 0L ? "" : "Hostel")
+        + ((temp & 4L) == 0L ? "" : "Capsule Hotel");
+    }
 
     @Override
     public int compareTo(HotelEntry o) {
         return - Long.compare(getScore(), o.getScore());
     }
-
     @Override
     public String toString(){
-        long temp;
         return String.format("\nID: %d"
                                 + "\nName: %s"
                                 + "\nRating: %d"
                                 + "\nLocation: %s"
                                 + "\nDescription:\n%s\n"
                                 + "\nType: "
-                                + (((temp = getTypeAmenities()) & 1L) == 0L ? "" : "Hotel")
-                                + ((temp & 2L) == 0L ? "" : "Hostel")
-                                + ((temp & 4L) == 0L ? "" : "Capsule Hotel")
+                                + getType()
                                 + "\n\nAmenities: "
                                 + ((temp & 8L) == 0L ? "" : "\n - Safe")
                                 + ((temp & 16L) == 0L ? "" : "\n - Suit Press")

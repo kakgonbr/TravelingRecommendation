@@ -249,7 +249,7 @@ public class RestaurantEntry implements Comparable<RestaurantEntry>{
                                     + (((temp = getDiningTimeGoodFor()) & 1L) == 0L ? "" : "\n - Morning")
                                     + ((temp & 2L) == 0L ? "" : "\n - Noon")
                                     + ((temp & 4L) == 0L ? "" : "\n - Afternoon")
-                                    + ((temp & 8L) == 0L ? "" : "\n - Evening")                                    
+                                    + ((temp & 8L) == 0L ? "" : "\n - Evening")                             
                                     + "\n\nAmenities: "
                                     + (((temp = getTypeAmenities()) & 1L) == 0 ? "" : "\n - Delivery" )
                                     + ((temp & 2L) == 0L ? "" : "\n - Takeaway" )
@@ -264,7 +264,19 @@ public class RestaurantEntry implements Comparable<RestaurantEntry>{
                                     + ((temp & 512L) == 0L ? "" : "\n - Online Shopping")
                                     + ((temp & 1024L) == 0L ? "" : "\n - Street Food")
                                     + ((temp & 2048L) == 0L ? "" : "\n - Shop - Store")
-                                    + ((temp & 4096L) == 0L ? "" : "\n - Wedding Convention") + "\n"
+                                    + ((temp & 4096L) == 0L ? "" : "\n - Wedding Convention") 
+                                    + "\n\nGood For:"
+                                    + (((temp = getDiningTimeGoodFor()) & 16L) == 0L ? "" : "\n - Snack")
+                                    + ((temp & 32L) == 0L ? "" : "\n - Dates")
+                                    + ((temp & 64L) == 0L ? "" : "\n - Meeting")
+                                    + ((temp & 128L) == 0L ? "" : "\n - Relaxing")
+                                    + ((temp & 256L) == 0L ? "" : "\n - Sightseeing")
+                                    + ((temp & 512L) == 0L ? "" : "\n - FastFood")
+                                    + ((temp & 1024L) == 0L ? "" : "\n - Party")
+                                    + ((temp & 2048L) == 0L ? "" : "\n - Wedding Ceremony")
+                                    + ((temp & 4096L) == 0L ? "" : "\n - Convention") 
+                                    + ((temp & 4096L) == 0L ? "" : "\n - Takeaway") 
+                                    + "\n"
                                     , getId(), getName(), getRating(), getPrice().getX(), getPrice().getY(), getLocation(),
                                     getCapacity(),
                                     getPrepTime().getX(),

@@ -17,6 +17,10 @@ public class Pair {
         return r;
     }
 
+    public double getDistance(){
+        return l.getPairLocation().doubleGetDistance(r.getPairLocation());
+    }
+
     public void setScore(int stays, int visits, DoublePair starting){ score = (l.getScore() * 3) + r.getScore() + components.TotalScoreCalculator.getScore(l, r, stays, visits, starting);}
     public long getScore(){ return score;}
 }

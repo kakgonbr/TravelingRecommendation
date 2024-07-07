@@ -39,6 +39,10 @@ public class FrameMain extends JFrame{
     private ListPanel restaurantGoodFor;
     private JSpinner restaurantSpinnerRating;
     private JSpinner restaurantSpinnerCapacity;
+    private JSpinner restaurantSpinnerBudgetLower;
+    private JSpinner restaurantSpinnerBudgetUpper;
+    private JSpinner restaurantSpinnerPrepTimeLower;
+    private JSpinner restaurantSpinnerPrepTimeUpper;
     // Miscs
     private java.util.ArrayList<misc.Pair> combos = new java.util.ArrayList<>();
     private java.util.ArrayList<components.HotelEntry> hotelList = new java.util.ArrayList<>();
@@ -125,7 +129,7 @@ public class FrameMain extends JFrame{
         panel3.setBackground(new Color(32, 33, 35));
 
         JPanel tabs = new JPanel();
-        tabs.setPreferredSize(new Dimension(1120, 560));
+        tabs.setPreferredSize(new Dimension(1220, 560));
         CardLayout cardLayout = new CardLayout();
         tabs.setLayout(cardLayout);
         // Info Pane
@@ -266,9 +270,12 @@ public class FrameMain extends JFrame{
         restaurantHolidayCheck.setBackground(new Color(32, 33, 35));
         restaurantHolidayCheck.setBounds(30, 670, 120, 30);
 
+        panelPersonal.add(labelPlaceHolder = new CustomLabel("Capacity: ", eFontLevels.MEDIUM, 3));
+        labelPlaceHolder.setBounds(20, 700, 100, 30);
+
         panelPersonal.add(restaurantSpinnerCapacity = new JSpinner(new SpinnerNumberModel(10, 1, 1000, 5)));
         restaurantSpinnerCapacity.setFont(new Font("Segoe UI", 0, 20));
-        restaurantSpinnerCapacity.setBounds(30, 710, 50, 30);
+        restaurantSpinnerCapacity.setBounds(30, 730, 50, 30);
 
         panelPersonal.add(labelPlaceHolder = new CustomLabel("Types: ", eFontLevels.MEDIUM, 3));
         labelPlaceHolder.setBounds(150, 540, 100, 30);
@@ -288,7 +295,7 @@ public class FrameMain extends JFrame{
         labelPlaceHolder.setBounds(430, 540, 100, 30);
 
         panelPersonal.add(restaurantGoodFor = new ListPanel(new String[]{"Snack",
-                                                                    "Dating",
+                                                                    "Dates",
                                                                     "Meeting",
                                                                     "Relaxing",
                                                                     "Sightseeing",
@@ -316,6 +323,28 @@ public class FrameMain extends JFrame{
                                                                         "Free Bike Park",
                                                                         "Outdoor Seats"}, "RestAm"));
         restaurantAmenities.setBounds(720, 750, 250, 140);
+
+        panelPersonal.add(labelPlaceHolder = new CustomLabel("Budget: ", eFontLevels.MEDIUM, 3));
+        labelPlaceHolder.setBounds(1000,  540, 150, 30);
+
+        panelPersonal.add(restaurantSpinnerBudgetLower = new JSpinner(new SpinnerNumberModel(5_000, 5_000, 3_000_000, 100)));
+        restaurantSpinnerBudgetLower.setFont(new Font("Segoe UI", 0, 20));
+        restaurantSpinnerBudgetLower.setBounds(1010, 570, 80, 30);
+
+        panelPersonal.add(restaurantSpinnerBudgetUpper = new JSpinner(new SpinnerNumberModel(100_000, 5_000, 3_000_000, 100)));
+        restaurantSpinnerBudgetUpper.setFont(new Font("Segoe UI", 0, 20));
+        restaurantSpinnerBudgetUpper.setBounds(1110, 570, 80, 30);
+
+        panelPersonal.add(labelPlaceHolder = new CustomLabel("Preparation Time: ", eFontLevels.MEDIUM, 3));
+        labelPlaceHolder.setBounds(1000,  640, 150, 30);
+
+        panelPersonal.add(restaurantSpinnerPrepTimeLower = new JSpinner(new SpinnerNumberModel(1, 1, 30, 1)));
+        restaurantSpinnerPrepTimeLower.setFont(new Font("Segoe UI", 0, 20));
+        restaurantSpinnerPrepTimeLower.setBounds(1010, 670, 80, 30);
+
+        panelPersonal.add(restaurantSpinnerPrepTimeUpper = new JSpinner(new SpinnerNumberModel(5, 1, 30, 1)));
+        restaurantSpinnerPrepTimeUpper.setFont(new Font("Segoe UI", 0, 20));
+        restaurantSpinnerPrepTimeUpper.setBounds(1110, 670, 80, 30);
 
         // Recommendation pane
         panelRecommend = new JPanel();
@@ -410,7 +439,7 @@ public class FrameMain extends JFrame{
         gbc.fill = GridBagConstraints.BOTH;
         add(tabs, gbc);
 
-        setBounds(100, 100, 1500, 960);
+        setBounds(100, 100, 1600, 960);
         getContentPane().setBackground(new Color(22, 23, 25));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
@@ -420,7 +449,7 @@ public class FrameMain extends JFrame{
     private void getRecommendation(){
         components.HotelEntry idealHotel = new components.HotelEntry();
         idealHotel.setFacilities(hotelFacilities.getChoiceBinary());
-        idealHotel.setTypeAmenities(hotelTypes.getChoiceBinary() | hotelAmenities.getChoiceBinary());
+        idealHotel.setTypeAmenities(hotelTypes.getChoiceBinary() | (hotelAmenities.getChoiceBinary() << 3));
         idealHotel.setRating((Integer) hotelSpinnerRating.getValue());
         idealHotel.setView(hotelCheckView.isSelected());
 
@@ -428,8 +457,10 @@ public class FrameMain extends JFrame{
         idealRestaurant.setCapacity((Integer) restaurantSpinnerCapacity.getValue());
         idealRestaurant.setHoliday(restaurantHolidayCheck.isSelected());
         idealRestaurant.setRating((Double) restaurantSpinnerRating.getValue());
-        idealRestaurant.setDiningGood(restaurantDiningTime.getChoiceBinary() | restaurantGoodFor.getChoiceBinary());
-        idealRestaurant.setTypeAmenities(restaurantAmenities.getChoiceBinary() | restaurantTypes.getChoiceBinary());
+        idealRestaurant.setDiningGood(restaurantDiningTime.getChoiceBinary() | (restaurantGoodFor.getChoiceBinary() << 4));
+        idealRestaurant.setTypeAmenities(restaurantAmenities.getChoiceBinary() | (restaurantTypes.getChoiceBinary() << 4));
+        idealRestaurant.setPrep(new misc.LongPair(Math.min((Integer) restaurantSpinnerPrepTimeLower.getValue(), (Integer) restaurantSpinnerPrepTimeUpper.getValue()), Math.max((Integer) restaurantSpinnerPrepTimeLower.getValue(), (Integer) restaurantSpinnerPrepTimeUpper.getValue())));
+        idealRestaurant.setPrice(new misc.LongPair(Math.min((Integer) restaurantSpinnerBudgetLower.getValue(), (Integer) restaurantSpinnerBudgetUpper.getValue()), Math.max((Integer) restaurantSpinnerBudgetLower.getValue(), (Integer) restaurantSpinnerBudgetUpper.getValue())));
 
         combos.removeAll(combos);
         for (final components.HotelEntry hotel : hotelList) for (final components.RestaurantEntry restaurant : restaurantList){
@@ -484,13 +515,126 @@ public class FrameMain extends JFrame{
             50 
         );
 
-        setPaneText(txPaneComparison, "-".repeat(50) + " Hotel " + "-".repeat(50), Color.WHITE, true);
+        setPaneText(txPaneComparison, "-".repeat(49) + " Hotel " + "-".repeat(49), Color.WHITE, true);
         setPaneText(txPaneComparison, "\nType: ", Color.WHITE, false);
-        setPaneText(txPaneComparison, ((temp = combos.get(index).getHotel().getTypeAmenities()) & 1L) == 0L? "" : "Hotel" + ((temp & 2L) == 0L ? "" : "Hostel")
-        + ((temp & 4L) == 0L ? "" : "Capsule Hotel"), ((_idealHotel.getTypeAmenities() & 7L) & combos.get(index).getHotel().getTypeAmenities()) == 0 ? new Color(255, 0, 0) : new Color(0, 255, 0), false);
-        // setPaneText(txPaneComparison, "Facilities", getBackground(), rootPaneCheckingEnabled);
-        // setPaneText(txPaneComparison, "123", new Color(255, 255, 255), false);
-        // setPaneText(txPaneComparison, " abc", new Color(255, 0, 0), false);
+        setPaneText(txPaneComparison, combos.get(index).getHotel().getType(), ((_idealHotel.getTypeAmenities() & 7L) & combos.get(index).getHotel().getTypeAmenities()) == 0 ? Color.RED : Color.GREEN, false);
+
+            // Amenities
+        setPaneText(txPaneComparison, "\nAmenities: ", Color.WHITE, false);
+        // System.out.println("Current: " + combos.get(index).getHotel().getTypeAmenities());
+        // System.out.println("Ideal: " + _idealHotel.getTypeAmenities());
+        // System.out.println("Result: " + ((~combos.get(index).getHotel().getTypeAmenities() & _idealHotel.getTypeAmenities())));
+        setPaneText(txPaneComparison, (((temp = (combos.get(index).getHotel().getTypeAmenities() & _idealHotel.getTypeAmenities())) & 8L) == 0L ? "" : "\n - Safe"), Color.GREEN, false);
+        setPaneText(txPaneComparison, ((temp & 16L) == 0L ? "" : "\n - Suit Press"), Color.GREEN, false);
+        setPaneText(txPaneComparison, ((temp & 32L) == 0L ? "" : "\n - Heating"), Color.GREEN, false);
+
+        setPaneText(txPaneComparison, (((temp = (~combos.get(index).getHotel().getTypeAmenities() & _idealHotel.getTypeAmenities())) & 8L) == 0L ? "" : "\n - Safe"), Color.RED, false);
+        setPaneText(txPaneComparison, ((temp & 16L) == 0L ? "" : "\n - Suit Press"), Color.RED, false);
+        setPaneText(txPaneComparison, ((temp & 32L) == 0L ? "" : "\n - Heating"), Color.RED, false);
+        
+            // Facilities
+        setPaneText(txPaneComparison, "\nAmenities: ", Color.WHITE, false);
+        setPaneText(txPaneComparison, (((temp = (combos.get(index).getHotel().getFacilities() & _idealHotel.getFacilities())) & 1L) == 0L ? "" : "\n - Air Conditioning"), Color.GREEN, false);
+        setPaneText(txPaneComparison, ((temp & 2L) == 0L ? "" : "\n - Airport Shuttle"), Color.GREEN, false);
+        setPaneText(txPaneComparison, ((temp & 4L) == 0L ? "" : "\n - Beach"), Color.GREEN, false);
+        setPaneText(txPaneComparison, ((temp & 8L) == 0L ? "" : "\n - Bar"), Color.GREEN, false);
+        setPaneText(txPaneComparison, ((temp & 16L) == 0L ? "" : "\n - Family Rooms"), Color.GREEN, false);
+        setPaneText(txPaneComparison, ((temp & 32L) == 0L ? "" : "\n - EV Charging Station"), Color.GREEN, false);
+        setPaneText(txPaneComparison, ((temp & 64L) == 0L ? "" : "\n - Non Smoking Room"), Color.GREEN, false);
+        setPaneText(txPaneComparison, ((temp & 128L) == 0L ? "" : "\n - Swimming Pool"), Color.GREEN, false);
+
+        setPaneText(txPaneComparison, (((temp = (~combos.get(index).getHotel().getFacilities() & _idealHotel.getFacilities())) & 1L) == 0L ? "" : "\n - Air Conditioning"), Color.RED, false);
+        setPaneText(txPaneComparison, ((temp & 2L) == 0L ? "" : "\n - Airport Shuttle"), Color.RED, false);
+        setPaneText(txPaneComparison, ((temp & 4L) == 0L ? "" : "\n - Beach"), Color.RED, false);
+        setPaneText(txPaneComparison, ((temp & 8L) == 0L ? "" : "\n - Bar"), Color.RED, false);
+        setPaneText(txPaneComparison, ((temp & 16L) == 0L ? "" : "\n - Family Rooms"), Color.RED, false);
+        setPaneText(txPaneComparison, ((temp & 32L) == 0L ? "" : "\n - EV Charging Station"), Color.RED, false);
+        setPaneText(txPaneComparison, ((temp & 64L) == 0L ? "" : "\n - Non Smoking Room"), Color.RED, false);
+        setPaneText(txPaneComparison, ((temp & 128L) == 0L ? "" : "\n - Swimming Pool"), Color.RED, false);
+
+
+            // Restaurant
+        setPaneText(txPaneComparison, "\n\n" + "-".repeat(46) + " Restaurant " + "-".repeat(46), Color.WHITE, false);
+            
+            // Dinning times
+        setPaneText(txPaneComparison, "\nDinning Times: ", Color.WHITE, false);
+        setPaneText(txPaneComparison, (((temp = (combos.get(index).getRest().getDiningTimeGoodFor() & _idealRestaurant.getDiningTimeGoodFor())) & 1L) == 0L ? "" : "\n - Morning"), Color.GREEN, false);
+        setPaneText(txPaneComparison, ((temp & 2L) == 0L ? "" : "\n - Noon"), Color.GREEN, false);
+        setPaneText(txPaneComparison, ((temp & 4L) == 0L ? "" : "\n - Afternoon"), Color.GREEN, false);
+        setPaneText(txPaneComparison, ((temp & 8L) == 0L ? "" : "\n - Evening"), Color.GREEN, false);
+
+        setPaneText(txPaneComparison, (((temp = (~combos.get(index).getRest().getDiningTimeGoodFor() & _idealRestaurant.getDiningTimeGoodFor())) & 1L) == 0L ? "" : "\n - Morning"), Color.RED, false);
+        setPaneText(txPaneComparison, ((temp & 2L) == 0L ? "" : "\n - Noon"), Color.RED, false);
+        setPaneText(txPaneComparison, ((temp & 4L) == 0L ? "" : "\n - Afternoon"), Color.RED, false);
+        setPaneText(txPaneComparison, ((temp & 8L) == 0L ? "" : "\n - Evening"), Color.RED, false);
+
+        setPaneText(txPaneComparison, "\nTypes: ", Color.WHITE, false);
+        setPaneText(txPaneComparison, (((temp = (combos.get(index).getRest().getTypeAmenities() & _idealRestaurant.getTypeAmenities())) & 16L) == 0L ? "" : "\n - Bakery"), Color.GREEN, false);
+        setPaneText(txPaneComparison, ((temp & 32L) == 0L ? "" : "\n - Foodcourt"), Color.GREEN, false);
+        setPaneText(txPaneComparison, ((temp & 64L) == 0L ? "" : "\n - Restaurant"), Color.GREEN, false);
+        setPaneText(txPaneComparison, ((temp & 128L) == 0L ? "" : "\n - Coffee - Dessert"), Color.GREEN, false);
+        setPaneText(txPaneComparison, ((temp & 256L) == 0L ? "" : "\n - Sight - Landmark"), Color.GREEN, false);
+        setPaneText(txPaneComparison, ((temp & 512L) == 0L ? "" : "\n - Online Shopping"), Color.GREEN, false);
+        setPaneText(txPaneComparison, ((temp & 1024L) == 0L ? "" : "\n - Street Food"), Color.GREEN, false);
+        setPaneText(txPaneComparison, ((temp & 2048L) == 0L ? "" : "\n - Shop Stores"), Color.GREEN, false);
+        setPaneText(txPaneComparison, ((temp & 4096L) == 0L ? "" : "\n - Wedding Convention"), Color.GREEN, false);
+
+        setPaneText(txPaneComparison, (((temp = (~combos.get(index).getRest().getTypeAmenities() & _idealRestaurant.getTypeAmenities())) & 16L) == 0L ? "" : "\n - Bakery"), Color.RED, false);
+        setPaneText(txPaneComparison, ((temp & 32L) == 0L ? "" : "\n - Foodcourt"), Color.RED, false);
+        setPaneText(txPaneComparison, ((temp & 64L) == 0L ? "" : "\n - Restaurant"), Color.RED, false);
+        setPaneText(txPaneComparison, ((temp & 128L) == 0L ? "" : "\n - Coffee - Dessert"), Color.RED, false);
+        setPaneText(txPaneComparison, ((temp & 256L) == 0L ? "" : "\n - Sight - Landmark"), Color.RED, false);
+        setPaneText(txPaneComparison, ((temp & 512L) == 0L ? "" : "\n - Online Shopping"), Color.RED, false);
+        setPaneText(txPaneComparison, ((temp & 1024L) == 0L ? "" : "\n - Street Food"), Color.RED, false);
+        setPaneText(txPaneComparison, ((temp & 2048L) == 0L ? "" : "\n - Shop Stores"), Color.RED, false);
+        setPaneText(txPaneComparison, ((temp & 4096L) == 0L ? "" : "\n - Wedding Convention"), Color.RED, false);
+
+        setPaneText(txPaneComparison, "\nAmenities: ", Color.WHITE, false);
+        setPaneText(txPaneComparison, (((temp = (combos.get(index).getRest().getTypeAmenities() & _idealRestaurant.getTypeAmenities())) & 1L) == 0L ? "" : "\n - Delivery Services"), Color.GREEN, false);
+        setPaneText(txPaneComparison, ((temp & 2L) == 0L ? "" : "\n - Takeaway Services"), Color.GREEN, false);
+        setPaneText(txPaneComparison, ((temp & 4L) == 0L ? "" : "\n - Free Bike Park"), Color.GREEN, false);
+        setPaneText(txPaneComparison, ((temp & 8L) == 0L ? "" : "\n - OutDoor Seats"), Color.GREEN, false);
+        
+        setPaneText(txPaneComparison, (((temp = (~combos.get(index).getRest().getTypeAmenities() & _idealRestaurant.getTypeAmenities())) & 1L) == 0L ? "" : "\n - Delivery Services"), Color.RED, false);
+        setPaneText(txPaneComparison, ((temp & 2L) == 0L ? "" : "\n - Takeaway Services"), Color.RED, false);
+        setPaneText(txPaneComparison, ((temp & 4L) == 0L ? "" : "\n - Free Bike Park"), Color.RED, false);
+        setPaneText(txPaneComparison, ((temp & 8L) == 0L ? "" : "\n - OutDoor Seats"), Color.RED, false);
+
+        setPaneText(txPaneComparison, "\nGood For: ", Color.WHITE, false);
+        setPaneText(txPaneComparison, (((temp = (combos.get(index).getRest().getDiningTimeGoodFor() & _idealRestaurant.getDiningTimeGoodFor())) & 16L) == 0L ? "" : "\n - Snacks"), Color.GREEN, false);
+        setPaneText(txPaneComparison, ((temp & 32L) == 0L ? "" : "\n - Dates"), Color.GREEN, false);
+        setPaneText(txPaneComparison, ((temp & 64L) == 0L ? "" : "\n - Meeting"), Color.GREEN, false);
+        setPaneText(txPaneComparison, ((temp & 128L) == 0L ? "" : "\n - Relaxing"), Color.GREEN, false);
+        setPaneText(txPaneComparison, ((temp & 256L) == 0L ? "" : "\n - Sightseeing"), Color.GREEN, false);
+        setPaneText(txPaneComparison, ((temp & 512L) == 0L ? "" : "\n - FastFood"), Color.GREEN, false);
+        setPaneText(txPaneComparison, ((temp & 1024L) == 0L ? "" : "\n - Party"), Color.GREEN, false);
+        setPaneText(txPaneComparison, ((temp & 2048L) == 0L ? "" : "\n - Wedding Ceremony"), Color.GREEN, false);
+        setPaneText(txPaneComparison, ((temp & 4096L) == 0L ? "" : "\n - Convention"), Color.GREEN, false);
+        setPaneText(txPaneComparison, ((temp & 8192) == 0L ? "" : "\n - Takeaway"), Color.GREEN, false);
+
+        setPaneText(txPaneComparison, (((temp = (~combos.get(index).getRest().getDiningTimeGoodFor() & _idealRestaurant.getDiningTimeGoodFor())) & 16L) == 0L ? "" : "\n - Snacks"), Color.RED, false);
+        setPaneText(txPaneComparison, ((temp & 32L) == 0L ? "" : "\n - Dates"), Color.RED, false);
+        setPaneText(txPaneComparison, ((temp & 64L) == 0L ? "" : "\n - Meeting"), Color.RED, false);
+        setPaneText(txPaneComparison, ((temp & 128L) == 0L ? "" : "\n - Relaxing"), Color.RED, false);
+        setPaneText(txPaneComparison, ((temp & 256L) == 0L ? "" : "\n - Sightseeing"), Color.RED, false);
+        setPaneText(txPaneComparison, ((temp & 512L) == 0L ? "" : "\n - FastFood"), Color.RED, false);
+        setPaneText(txPaneComparison, ((temp & 1024L) == 0L ? "" : "\n - Party"), Color.RED, false);
+        setPaneText(txPaneComparison, ((temp & 2048L) == 0L ? "" : "\n - Wedding Ceremony"), Color.RED, false);
+        setPaneText(txPaneComparison, ((temp & 4096L) == 0L ? "" : "\n - Convention"), Color.RED, false);
+        setPaneText(txPaneComparison, ((temp & 8192) == 0L ? "" : "\n - Takeaway"), Color.RED, false);
+
+        setPaneText(txPaneComparison, "\nPrice: ", Color.WHITE, false);
+        setPaneText(txPaneComparison, ((Long) (temp = combos.get(index).getRest().getPrice().getX())).toString(), ((temp = temp - _idealRestaurant.getPrice().getX()) > 0L) ? Color.GREEN : (temp > -1000L)? Color.YELLOW : Color.RED, false);
+        setPaneText(txPaneComparison, " - ", Color.WHITE, false);
+        setPaneText(txPaneComparison, ((Long) (temp = combos.get(index).getRest().getPrice().getY())).toString(), ((temp = temp - _idealRestaurant.getPrice().getY()) < 0L) ? Color.GREEN : (temp < 1000L)? Color.YELLOW : Color.RED, false);
+
+        setPaneText(txPaneComparison, "\nPreparation Time: ", Color.WHITE, false);
+        setPaneText(txPaneComparison, ((Long) (temp = combos.get(index).getRest().getPrepTime().getX())).toString(), ((temp = temp - _idealRestaurant.getPrepTime().getX()) > 0L) ? Color.GREEN : (temp > -1L)? Color.YELLOW : Color.RED, false);
+        setPaneText(txPaneComparison, " - ", Color.WHITE, false);
+        setPaneText(txPaneComparison, ((Long) (temp = combos.get(index).getRest().getPrepTime().getY())).toString(), ((temp = temp - _idealRestaurant.getPrepTime().getY()) < 0L) ? Color.GREEN : (temp < 1L)? Color.YELLOW : Color.RED, false);
+
+        setPaneText(txPaneComparison, "\nCapcity: ", Color.WHITE, false);
+        setPaneText(txPaneComparison, ((Long) (temp = combos.get(index).getRest().getCapacity())).toString(), ((temp = temp - _idealRestaurant.getCapacity()) > 0L) ? Color.GREEN : (temp > -5L)? Color.YELLOW : Color.RED, false);
         
         misc.Utils.logAppend("Hotel score: " + combos.get(index).getHotel().getScore()
                             + "\n\tRestaurant score: " + combos.get(index).getRest().getScore()

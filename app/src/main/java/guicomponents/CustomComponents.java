@@ -110,7 +110,7 @@ public class CustomComponents {
                 if (checkbox.isSelected()) result |= currentBit;
                 currentBit *= 2;
             } // for
-            // misc.Utils.logAppend("List panel: " + title + "\nBinary: " + Long.toBinaryString(result), null);
+            misc.Utils.logAppend("List panel: " + title + "\nBinary: " + Long.toBinaryString(result), null);
             return result;
         }
     }
