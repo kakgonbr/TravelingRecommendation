@@ -455,7 +455,7 @@ public class FrameMain extends JFrame{
             final int choiceIndex = i;
             CustomButton button = new CustomButton("Choice #" + (i + 1));
             choicePanels.add(button);
-            button.addActionListener(e -> loadInfo(choiceIndex));
+            button.addActionListener(e -> loadInfo(choiceIndex, idealHotel, idealRestaurant));
             choicePanels.add(Box.createRigidArea(new Dimension(1, 10)));
         }
         // panelRecommend.add(choicePanels);
@@ -467,7 +467,8 @@ public class FrameMain extends JFrame{
         panelRecommend.invalidate();
     }
 
-    private void loadInfo(int index){
+    private void loadInfo(int index, components.HotelEntry _idealHotel, components.RestaurantEntry _idealRestaurant){
+        long temp = 0;
         txAreaInfo.setText("-".repeat(78) + " Hotel " + "-".repeat(78)
                     + combos.get(index).getHotel()
                     + "-".repeat(76) + " Restaurant " + "-".repeat(76)
@@ -482,6 +483,14 @@ public class FrameMain extends JFrame{
             }, 
             50 
         );
+
+        setPaneText(txPaneComparison, "-".repeat(50) + " Hotel " + "-".repeat(50), Color.WHITE, true);
+        setPaneText(txPaneComparison, "\nType: ", Color.WHITE, false);
+        setPaneText(txPaneComparison, ((temp = combos.get(index).getHotel().getTypeAmenities()) & 1L) == 0L? "" : "Hotel" + ((temp & 2L) == 0L ? "" : "Hostel")
+        + ((temp & 4L) == 0L ? "" : "Capsule Hotel"), ((_idealHotel.getTypeAmenities() & 7L) & combos.get(index).getHotel().getTypeAmenities()) == 0 ? new Color(255, 0, 0) : new Color(0, 255, 0), false);
+        // setPaneText(txPaneComparison, "Facilities", getBackground(), rootPaneCheckingEnabled);
+        // setPaneText(txPaneComparison, "123", new Color(255, 255, 255), false);
+        // setPaneText(txPaneComparison, " abc", new Color(255, 0, 0), false);
         
         misc.Utils.logAppend("Hotel score: " + combos.get(index).getHotel().getScore()
                             + "\n\tRestaurant score: " + combos.get(index).getRest().getScore()
@@ -497,6 +506,7 @@ public class FrameMain extends JFrame{
         aset = sc.addAttribute(aset, javax.swing.text.StyleConstants.Alignment, javax.swing.text.StyleConstants.ALIGN_LEFT);
         aset = sc.addAttribute(aset, javax.swing.text.StyleConstants.FontSize, 18);
         
+        if (_reset) tp.setText("");
         tp.setCaretPosition(_reset ? 0 : tp.getDocument().getLength());
         tp.setCharacterAttributes(aset, false);
         tp.replaceSelection(msg);
